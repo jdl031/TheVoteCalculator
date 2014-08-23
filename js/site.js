@@ -101,7 +101,9 @@ function loadResults(){
 	var ValOne;
 	var ValTwo;
 	// TODO - Update Margins
-		// For each 
+		// For each pair in pairArray
+			// for each vote for that pair
+				// Update margin 
 	// resultsArray = VoteCalc.CalcResults();
 	// Display resultsArray (an array of Candidate Nodes)
 
