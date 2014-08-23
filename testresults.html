@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Preferential Voting Calculator</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700' rel='stylesheet' type='text/css'>
+		<link href="css/bootstrap.css" rel="stylesheet">
+		<link href="css/site.css" rel="stylesheet">
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="chart"></div>
+		<script type="text/javascript">
+			var data = [4, 8, 15, 16, 23, 42];
+
+			var x = d3.scale.linear()
+			    .domain([0, d3.max(data)])
+			    .range([0, 420]);
+
+			d3.select(".chart")
+			  .selectAll("div")
+			    .data(data)
+			  .enter().append("div")
+			    .style("width", function(d) { return x(d) + "px"; })
+			    .text(function(d) { return d; });
+
+		</script>
+	</body>
+</html>
