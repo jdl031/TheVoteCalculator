@@ -1,42 +1,39 @@
 public class voteCalc {
 
 	private var candidates; // Array of candidates (names).
-	private var voters; // 2d array of voters and their rankings of candidates.
 
-	public function voteCalc(candidates, voters) {
-		this.candidates = candidates;
-		this.voters = voters;
+	public function voteCalc() {
 	}
 
 	/**
-	* TODO
+	* Calculates the voting results.
 	*
-	* O(n*log n)
-	*/
-
-	private function getCandidatePairs() {
-		var candidatePairs = [],
-			candidates = this.candidates;
-
-		for (var i = 0; i < candidates.length; i++) {
-			for (var j = i + 1; j < candidates.length; j++) {
-				candidatePairs.push(new pair(candidates[i], candidates[j]));
-			}
-		}
-
-		return candidatePairs;
-	}
-
-	/**
-	* TODO
+	* @params  pairs  Array of candidate pair objects.
+	*          nodes  Array of candidate node objects.
 	*
 	* O(m*n*(nCh2))
 	*/
 
-	public function processVotes() {
-		var pair,
-			voters = this.voters,
-			candidates = this.candidates;
+	public function calcResults(pairs, nodes) {
+
+		var candidatePairs = [],
+			candNodeList = nodes;
+
+		/*
+
+		Make candidatePairs an array of arrays, to allow possibility of a ties (majorities and minorities are equal.)
+
+		*/
+
+/*		var candNodeList = [],
+			nodeCand,
+			cand;
+
+		for (var i = 0; i < candidates; i++) {
+			cand = candidates[i];
+			nodeCand = new candNode(cand);
+			candNodeList.push(nodeCand);
+		}
 
 		var candidatePairs = getCandidatePairs();
 
@@ -44,55 +41,72 @@ public class voteCalc {
 			for (var j = 0; j < candidatePairs.length; j++) {
 				pair = candidatePairs[j];
 				for (var k = 0; k < candidates.length; k++) {
-					if(voters[i][j] === pair.getCand1()) {
-						pair.incrCand1();
+					if(voters[i][k] === pair.getCand1()) {
+						pair.adjustMargin();
 						break;
 					}
-					else if(voters[i][j] === pair.getCand2()) {
-						pair.incrCand2();
+					else if(voters[i][k] === pair.getCand2()) {
+						pair.adjustMargin();
 						break;
 					}
+			}
+		}*/
+
+		var marginIndex;
+
+		for(var i = 0; i < pairs.length; i++) {
+			if((marginIndex = isContained(pairs[i].getMargin()), candidatePairs)) >= 0) {
+				candidatePairs[marginIndex].PairArray.push(pairs[i]);
+			}
+			else {
+				candidatePairs.push({
+					"margin": pairs[i].getMargin(),
+					"PairArray": new Array(pairs[i])
+			 	});
 			}
 		}
 
-		candidatePairs.sort(function (a, b) {
-			if(a.getMajority() > b.getMajority()) {
+		candidatesPairs.sort(function (a, b) {
+			if(Math.abs(a.margin) > Math.abs(b.margin) {
 				return -1;
 			}
-			if(a.getMajority() < b.getMajority()) {
-				return 1;
-			}
-			if(a.getMinority() < b.getMinority()) {
-				return -1;
-			}
-			if(a.getMinority() > b.getMinority()) {
+			else if(Math.abs(a.margin) < Math.abs(b.margin) {
 				return 1;
 			}
 			return 0;
-		});
+		}
 
-		var candNodeList = [],
+/*		candidatePairs.sort(function (a, b) {
+			if(a.getMargin() > b.getMargin()) {
+				return -1;
+			}
+			else if (a.getMargin() < b.getMargin()) {
+				return 1;
+			}
+			return 0;
+		});*/
+
+		var	pair,
+			pairArray,
 			nodeCand1,
 			nodeCand2,
 			cand1,
 			cand2;
 
+		/* While iterating through candidatePairs, check if candidatePairs[i].length > 1, if so, pair does not yield an edge! */
+
 		for (var i = 0; i < candidatePairs.length; i++) {
-			cand1 = candidatePairs[i].getCand1();
-			cand2 = candidatePairs[i].getCand2();
-			if((nodeCand1 = isContained(cand1, candNodeList)) === null) {
-				nodeCand1 = new candNode(cand1);
-				candNodeList.push(nodeCand1);
-			}
-			if((nodeCand2 = isContained(cand2, candNodeList)) === null) {
-				nodeCand2 = new candNode(cand2);
-				candNodeList.push(nodeCand2);
-			}
-			if(candidatePairs[i].getWinner() === 1) {
-				nodeCand1.setNext(nodeCand2);
-			}
-			else if(candidatePairs[i].getWinner() === -1) {
-				nodeCand2.setNext(nodeCand1);
+			pair = candidatePairs[i];
+			pairArray = pair.PairArray;
+			for (var j = 0; j < pairArray.length; j++) {
+				nodeCand1 = pairArray[j].getCand1Node();
+				nodeCand2 = pairArray[j].getCand2Node();
+				if(pairArray[j].getWinner() === 1) {
+					nodeCand1.setNext(nodeCand2);
+				}
+				else if(pairArray[j].getWinner() === -1) {
+					nodeCand2.setNext(nodeCand1);
+				}
 			}
 		}
 
@@ -119,115 +133,112 @@ public class voteCalc {
 
 	}
 
-	private function isContained(cand, nodeList) {
-		
-		if(!(nodeList instanceof Array)) {
-			return null;
+	private function isContained(value, array) {
+		if(array.length === 0) {
+			return -1;
 		}
-
-		if(nodeList.length === 0) {
-			return null;
+		if(typeof array[0].margin == "undefined") {
+			return -1;
 		}
-
-		if(typeof(nodeList[0]) !== "object") {
-			return null;
-		}
-
-		if(typeof(nodeList[0].getCand()) === "undefined") {
-			return null;
-		}
-
-		for (int i = 0; i < nodeList.length; i++) {
-			if(cand === nodeList[i].getCand()) {
-				return nodeList[i];
+		for(var i = 0; i < array.length; i++) {
+			if(array[i].margin === value) {
+				return i;
 			}
 		}
 
-		return null;
-
+		return -1;
 	}
 
-	if((typeof(haystack) !== "object") || (typeof(haystack.getCand1()) !== "function") || (typeof(haystack.getCand2()) !== "function")) {
-			return false;
+/*	private function mergePairs(left, right) {
+		var result = [[]],
+			i = 0,
+			j;
+
+		while(i < left.length && j < right.length) {
+			if(left[i][0] < right[j][0]) {
+				result.push(left[i++][0]);
+			}
+			else if(left[i][0] > right[j][0]) {
+				result.push(right[j++][[0]]);
+			}
+			else {
+
+			}
 		}
+
+		return result.concat(left.slice(i).concat(right.slice(j)));
+	}
+
+	private function sortPairs(pairs) {
+		var candPairs = pairs;
+
+		if(pairs.length < 2) {
+			return pairs;
+		}
+
+		var middle = Math.floor(pairs.length / 2),
+			left = pairs.slice(0, middle),
+			right = items.slice(middle),
+			params = mergePairs(sortPairs(left), sortPairs(right));
+
+
+	}*/
+
+	/**
+	* TODO
+	*
+	* O(n*log n)
+	*/
+
+/*	private function getCandidatePairs() {
+		var candidatePairs = [],
+			candidates = this.candidates;
+
+		for (var i = 0; i < candidates.length; i++) {
+			for (var j = i + 1; j < candidates.length; j++) {
+				candidatePairs.push(new pair(candidates[i], candidates[j]));
+			}
+		}
+
+		return candidatePairs;
+	}*/
 
 }
 
 public class pair {
-	private var cand1;
-	private var cand2;
-	private var cand1Votes;
-	private var cand2Votes;
-	public function pair(cand1, cand2) {
-		this.cand1 = cand1;
-		this.cand2 = cand2;
-		cand1Votes = 0;
-		cand2Votes = 0;
+	private var cand1Node;
+	private var cand2Node;
+	private var margin;
+	public function pair(cand1Node, cand2Node) {
+		this.cand1Node = cand1Node;
+		this.cand2Node = cand2Node;
 	}
 
-	public function getCand1() {
-		return this.cand1;
+	public function getCand1Node() {
+		return this.cand1Node;
 	}
 
-	public function getCand2() {
-		return this.cand2;
+	public function getCand2Node() {
+		return this.cand2Node;
 	}
 
-	public function getCand1Votes() {
-		return this.cand1Votes;
-	}
-
-	public function getCand2Votes() {
-		return this.cand1Votes;
-	}
-
-	public function incrCand1() {
-		this.cand1Votes++;
-	}
-
-	public function incrCand2() {
-		this.cand2Votes++;
+	public function adjustMargin(cand) {
+		(cand === this.cand1Node.getCand()) ? margin++ : margin--;
 	}
 
 	public function getWinner() {
-		if(this.cand1Votes > this.cand2Votes) {
-			return cand1;
+		if(this.margin > 0) {
+			return 1;
 		}
-		else if(this.cand2Votes > this.cand1Votes) {
-			return cand2;
+		else if(this.margin < 0) {
+			return -1;
 		}
-		else {
-			return "tie";
-		}
+		return 0;
 	}
 
-	public function getMajority() {
-		if(this.cand1Votes > this.cand2Votes) {
-			return this.cand1Votes;
-		}
-		if(this.cand1Votes < this.cand2Votes) {
-			return this.cand2Votes;
-		}
-		return this.cand1Votes;
+	public function getMargin() {
+		return this.margin;
 	}
-
-	public function getMinority() {
-		if(this.cand1Votes > this.cand2Votes) {
-			return this.cand2Votes;
-		}
-		if(this.cand1Votes < this.cand2Votes) {
-			return this.cand1Votes;
-		}
-		return this.cand1Votes;
-	}
-
-	/*
-
-	public function getDiff() {
-		return Math.abs(this.cand1 - this.cand2);
-	}
-
-	*/
 
 }
 
@@ -235,18 +246,34 @@ public class candNode {
 
 	private var nextNodes;
 	private var cand;
+	private var inDegree;
+	private var indexID;
 
-	public function candNode(cand) {
+	public function candNode(cand, indexID) {
 		this.nextNodes = [];
 		this.cand = cand;
+		this.inDegree = 0;
+		this.indexID = indexID;
 	}
 
 	public function setNext(nextNode) {
 		this.nextNodes.push(nextNode);
 	}
 
-	public function getNext() {
+	public function incrInDegree() {
+		this.inDegree++;
+	}
+
+	public function getNextNodes() {
 		return this.nextNodes;
+	}
+
+	public function getIndexID() {
+		return this.indexID;
+	}
+
+	public function getInDegree() {
+		return this.inDegree;
 	}
 
 	public function getCand() {
