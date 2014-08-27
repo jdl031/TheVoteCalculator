@@ -1,56 +1,27 @@
+/**
+* Main class where vote calculation takes place.
+*/
+
 public class voteCalc {
 
 	private var candidates; // Array of candidates (names).
+
+	/**
+	* Constructor (empty).
+	*/
 
 	public function voteCalc() {
 	}
 
 	/**
-	* Calculates the voting results.
-	*
-	* @params  pairs  Array of candidate pair objects.
-	*          nodes  Array of candidate node objects.
-	*
-	* O(m*n*(nCh2))
+	* Calculates the voting results, taking in an array of candidate pairs
+	* and an array of candidate nodes.
 	*/
 
 	public function calcResults(pairs, nodes) {
 
 		var candidatePairs = [],
 			candNodeList = nodes;
-
-		/*
-
-		Make candidatePairs an array of arrays, to allow possibility of a ties (majorities and minorities are equal.)
-
-		*/
-
-/*		var candNodeList = [],
-			nodeCand,
-			cand;
-
-		for (var i = 0; i < candidates; i++) {
-			cand = candidates[i];
-			nodeCand = new candNode(cand);
-			candNodeList.push(nodeCand);
-		}
-
-		var candidatePairs = getCandidatePairs();
-
-		for (var i = 0; i < voters.length; i++) {
-			for (var j = 0; j < candidatePairs.length; j++) {
-				pair = candidatePairs[j];
-				for (var k = 0; k < candidates.length; k++) {
-					if(voters[i][k] === pair.getCand1()) {
-						pair.adjustMargin();
-						break;
-					}
-					else if(voters[i][k] === pair.getCand2()) {
-						pair.adjustMargin();
-						break;
-					}
-			}
-		}*/
 
 		var marginIndex;
 
@@ -75,16 +46,6 @@ public class voteCalc {
 			}
 			return 0;
 		}
-
-/*		candidatePairs.sort(function (a, b) {
-			if(a.getMargin() > b.getMargin()) {
-				return -1;
-			}
-			else if (a.getMargin() < b.getMargin()) {
-				return 1;
-			}
-			return 0;
-		});*/
 
 		var	pair,
 			pairArray,
@@ -133,6 +94,10 @@ public class voteCalc {
 
 	}
 
+	/**
+	* Function checks to see if a given value is in a given array.
+	*/
+
 	private function isContained(value, array) {
 		if(array.length === 0) {
 			return -1;
@@ -149,82 +114,58 @@ public class voteCalc {
 		return -1;
 	}
 
-/*	private function mergePairs(left, right) {
-		var result = [[]],
-			i = 0,
-			j;
-
-		while(i < left.length && j < right.length) {
-			if(left[i][0] < right[j][0]) {
-				result.push(left[i++][0]);
-			}
-			else if(left[i][0] > right[j][0]) {
-				result.push(right[j++][[0]]);
-			}
-			else {
-
-			}
-		}
-
-		return result.concat(left.slice(i).concat(right.slice(j)));
-	}
-
-	private function sortPairs(pairs) {
-		var candPairs = pairs;
-
-		if(pairs.length < 2) {
-			return pairs;
-		}
-
-		var middle = Math.floor(pairs.length / 2),
-			left = pairs.slice(0, middle),
-			right = items.slice(middle),
-			params = mergePairs(sortPairs(left), sortPairs(right));
-
-
-	}*/
-
-	/**
-	* TODO
-	*
-	* O(n*log n)
-	*/
-
-/*	private function getCandidatePairs() {
-		var candidatePairs = [],
-			candidates = this.candidates;
-
-		for (var i = 0; i < candidates.length; i++) {
-			for (var j = i + 1; j < candidates.length; j++) {
-				candidatePairs.push(new pair(candidates[i], candidates[j]));
-			}
-		}
-
-		return candidatePairs;
-	}*/
-
 }
 
+/**
+* Pair of candidates class.
+*/
+
 public class pair {
-	private var cand1Node;
-	private var cand2Node;
-	private var margin;
+	private var cand1Node; // First candidate node.
+	private var cand2Node; // Second candidate node.
+	private var margin; // Margin of victory between the two candidates.
+
+	/**
+	* Constructor, takes in the two candidate nodes..
+	*/
+
 	public function pair(cand1Node, cand2Node) {
 		this.cand1Node = cand1Node;
 		this.cand2Node = cand2Node;
+		this.margin = 0;
 	}
+
+	/**
+	* Gets the node pertaining to the first candidate.
+	*/
 
 	public function getCand1Node() {
 		return this.cand1Node;
 	}
 
+	/**
+	* Gets the node pertaining to the second candidate.
+	*/
+
 	public function getCand2Node() {
 		return this.cand2Node;
 	}
 
+	/**
+	* Increments the margin if the first candidate is given, decrements
+	* otherwise (second candidate).
+	*/
+
 	public function adjustMargin(cand) {
 		(cand === this.cand1Node.getCand()) ? margin++ : margin--;
 	}
+
+	/**
+	* Gets the winner of the two candidates: if the margin is greater
+	* than 0, the first candidate won, so return 1; if the
+	* margin is less than 0, the second candidate won, so return -1;
+	* if the margin is equal to 0, they tied, so return 0.
+	*/
 
 	public function getWinner() {
 		if(this.margin > 0) {
@@ -236,45 +177,87 @@ public class pair {
 		return 0;
 	}
 
+	/**
+	* Returns the current margin.
+	*/
+
 	public function getMargin() {
 		return this.margin;
 	}
 
 }
 
+/**
+* Node pertaining to a specific candidate class.
+*/
+
 public class candNode {
 
-	private var nextNodes;
-	private var cand;
-	private var inDegree;
-	private var indexID;
+	private var nextNodes; /* An array of candidate nodes that the
+	                          the current node points to. */
+	private var cand; // The name of the candidate.
+	private var inDegree; /* The number of candidate nodes that
+	                         point to this node. */
+	private var indexID; // View-specific index ID of this node.
+
+	/**
+	* Constructor, takes in the name of the candidate and the
+	* view-specific index ID of the node.
+	*/
 
 	public function candNode(cand, indexID) {
-		this.nextNodes = [];
+		this.nextNodes = []; // Starts with no next nodes.
 		this.cand = cand;
-		this.inDegree = 0;
+		this.inDegree = 0; // Starts with no nodes pointing to this node.
 		this.indexID = indexID;
 	}
+
+	/**
+	* Adds the specified argument node to the array of next nodes.
+	*
+	* TODO:
+	* 	- Change to 'addNext' with approval of James.
+	*/
 
 	public function setNext(nextNode) {
 		this.nextNodes.push(nextNode);
 	}
 
+	/**
+	* Increments the number of candidate nodes that point to this node.
+	*/
+
 	public function incrInDegree() {
 		this.inDegree++;
 	}
+
+	/**
+	* Returns the array of next nodes.
+	*/
 
 	public function getNextNodes() {
 		return this.nextNodes;
 	}
 
+	/**
+	* Returns the index ID.
+	*/
+
 	public function getIndexID() {
 		return this.indexID;
 	}
 
+	/**
+	* Returns the number of candidate nodes that point to this node.
+	*/
+
 	public function getInDegree() {
 		return this.inDegree;
 	}
+
+	/**
+	* Returns the candidate's name.
+	*/
 
 	public function getCand() {
 		return this.cand;
