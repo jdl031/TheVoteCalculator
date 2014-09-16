@@ -2,23 +2,17 @@
 * Main class where vote calculation takes place.
 */
 
-public class voteCalc {
-
-	private var candidates; // Array of candidates (names).
-
-	/**
-	* Constructor (empty).
-	*/
-
-	public function voteCalc() {
-	}
+function voteCalc() {
 
 	/**
 	* Calculates the voting results, taking in an array of candidate pairs
 	* and an array of candidate nodes.
+	* @param {Array of pair objects} pairs
+	* @param {Array of node objects} nodes
+	* @return {Array of }
 	*/
 
-	public function calcResults(pairs, nodes) {
+	this.calcResults = function(pairs, nodes) {
 
 		var candidatePairs = [],
 			candNodeList = nodes;
@@ -98,7 +92,7 @@ public class voteCalc {
 	* Function checks to see if a given value is in a given array.
 	*/
 
-	private function isContained(value, array) {
+	this.isContained = function(value, array) {
 		if(array.length === 0) {
 			return -1;
 		}
@@ -120,35 +114,19 @@ public class voteCalc {
 * Pair of candidates class.
 */
 
-public class pair {
-	private var cand1Node; // First candidate node.
-	private var cand2Node; // Second candidate node.
-	private var margin; // Margin of victory between the two candidates.
+function pair() {
+	var cand1Node; // First candidate node.
+	var cand2Node; // Second candidate node.
+	var margin; // Margin of victory between the two candidates.
 
 	/**
 	* Constructor, takes in the two candidate nodes..
 	*/
 
-	public function pair(cand1Node, cand2Node) {
-		this.cand1Node = cand1Node;
-		this.cand2Node = cand2Node;
-		this.margin = 0;
-	}
-
-	/**
-	* Gets the node pertaining to the first candidate.
-	*/
-
-	public function getCand1Node() {
-		return this.cand1Node;
-	}
-
-	/**
-	* Gets the node pertaining to the second candidate.
-	*/
-
-	public function getCand2Node() {
-		return this.cand2Node;
+	this.pairConstruct = function(canNod1, canNod2) {
+		cand1Node = canNod1;
+		cand2Node = canNod2;
+		margin = 0;
 	}
 
 	/**
@@ -156,8 +134,8 @@ public class pair {
 	* otherwise (second candidate).
 	*/
 
-	public function adjustMargin(cand) {
-		(cand === this.cand1Node.getCand()) ? margin++ : margin--;
+	this.adjustMargin = function(cand) {
+		(cand === cand1Node) ? margin++ : margin--;
 	}
 
 	/**
@@ -167,22 +145,14 @@ public class pair {
 	* if the margin is equal to 0, they tied, so return 0.
 	*/
 
-	public function getWinner() {
-		if(this.margin > 0) {
+	this.getWinner = function() {
+		if(margin > 0) {
 			return 1;
 		}
-		else if(this.margin < 0) {
+		else if(margin < 0) {
 			return -1;
 		}
 		return 0;
-	}
-
-	/**
-	* Returns the current margin.
-	*/
-
-	public function getMargin() {
-		return this.margin;
 	}
 
 }
@@ -191,25 +161,25 @@ public class pair {
 * Node pertaining to a specific candidate class.
 */
 
-public class candNode {
+function candNode() {
 
-	private var nextNodes; /* An array of candidate nodes that the
+	var nextNodes; /* An array of candidate nodes that the
 	                          the current node points to. */
-	private var cand; // The name of the candidate.
-	private var inDegree; /* The number of candidate nodes that
+	var cand; // The name of the candidate.
+	var inDegree; /* The number of candidate nodes that
 	                         point to this node. */
-	private var indexID; // View-specific index ID of this node.
+	var indexID; // View-specific index ID of this node.
 
 	/**
 	* Constructor, takes in the name of the candidate and the
 	* view-specific index ID of the node.
 	*/
 
-	public function candNode(cand, indexID) {
-		this.nextNodes = []; // Starts with no next nodes.
-		this.cand = cand;
-		this.inDegree = 0; // Starts with no nodes pointing to this node.
-		this.indexID = indexID;
+	this.candNode = function(candName, indID) {
+		nextNodes = []; // Starts with no next nodes.
+		cand = candName;
+		inDegree = 0; // Starts with no nodes pointing to this node.
+		indexID = indID;
 	}
 
 	/**
@@ -219,48 +189,16 @@ public class candNode {
 	* 	- Change to 'addNext' with approval of James.
 	*/
 
-	public function setNext(nextNode) {
-		this.nextNodes.push(nextNode);
+	this.setNext = function(nextNode) {
+		nextNodes.push(nextNode);
 	}
 
 	/**
 	* Increments the number of candidate nodes that point to this node.
 	*/
 
-	public function incrInDegree() {
-		this.inDegree++;
-	}
-
-	/**
-	* Returns the array of next nodes.
-	*/
-
-	public function getNextNodes() {
-		return this.nextNodes;
-	}
-
-	/**
-	* Returns the index ID.
-	*/
-
-	public function getIndexID() {
-		return this.indexID;
-	}
-
-	/**
-	* Returns the number of candidate nodes that point to this node.
-	*/
-
-	public function getInDegree() {
-		return this.inDegree;
-	}
-
-	/**
-	* Returns the candidate's name.
-	*/
-
-	public function getCand() {
-		return this.cand;
+	this.incrInDegree = function() {
+		inDegree++;
 	}
 	
 }
