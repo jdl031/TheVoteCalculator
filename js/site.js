@@ -254,28 +254,22 @@ function voteCalc() {
 * Pair of candidates class.
 */
 
-function pair() {
-	var cand1Node; // First candidate node.
-	var cand2Node; // Second candidate node.
-	var margin; // Margin of victory between the two candidates.
+function pair(canNod1, canNod2) {
 
 	/**
 	* Constructor, takes in the two candidate nodes..
 	*/
-
-	this.pairConstruct = function(canNod1, canNod2) {
-		cand1Node = canNod1;
-		cand2Node = canNod2;
-		margin = 0;
-	}
-
+	this.cand1Node = canNod1;
+	this.cand2Node = canNod2;
+	this.margin = 0;
 	/**
 	* Increments the margin if the first candidate is given, decrements
 	* otherwise (second candidate).
 	*/
-
+	var self = this;
 	this.adjustMargin = function(cand) {
-		(cand === cand1Node) ? margin++ : margin--;
+		(cand.indexID === self.cand1Node.indexID) ? self.margin++ : self.margin--;
+		return true;
 	}
 
 	/**
@@ -286,10 +280,10 @@ function pair() {
 	*/
 
 	this.getWinner = function() {
-		if(margin > 0) {
+		if(self.margin > 0) {
 			return 1;
 		}
-		else if(margin < 0) {
+		else if(self.margin < 0) {
 			return -1;
 		}
 		return 0;
