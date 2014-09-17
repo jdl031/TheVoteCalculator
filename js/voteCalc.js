@@ -20,12 +20,12 @@ function voteCalc() {
 		var marginIndex;
 
 		for(var i = 0; i < pairs.length; i++) {
-			if((marginIndex = isContained(pairs[i].getMargin()), candidatePairs)) >= 0) {
+			if((marginIndex = isContained(pairs[i].margin, candidatePairs)) >= 0) {
 				candidatePairs[marginIndex].PairArray.push(pairs[i]);
 			}
 			else {
 				candidatePairs.push({
-					"margin": pairs[i].getMargin(),
+					"margin": pairs[i].margin,
 					"PairArray": new Array(pairs[i])
 			 	});
 			}
@@ -54,8 +54,8 @@ function voteCalc() {
 			pair = candidatePairs[i];
 			pairArray = pair.PairArray;
 			for (var j = 0; j < pairArray.length; j++) {
-				nodeCand1 = pairArray[j].getCand1Node();
-				nodeCand2 = pairArray[j].getCand2Node();
+				nodeCand1 = pairArray[j].cand1Node;
+				nodeCand2 = pairArray[j].cand2Node;
 				if(pairArray[j].getWinner() === 1) {
 					nodeCand1.setNext(nodeCand2);
 				}
@@ -68,7 +68,7 @@ function voteCalc() {
 		var nextList;
 
 		for (var i = 0; i < candNodeList.length; i++) {
-			nextList = candNodeList[i].getNext();
+			nextList = candNodeList[i].nextNodes;
 			for (var j = 0; j < nextList.length; j++) {
 				nextList[j].incrInDegree();
 			}
@@ -79,7 +79,7 @@ function voteCalc() {
 
 		for (var i = 0; i < candNodeList.length; i++) {
 			currNode = candNodeList[i];
-			if(currNode.getInDegree() === 0) {
+			if(currNode.inDegree === 0) {
 				sourceList.push(currNode);
 			}
 		}
