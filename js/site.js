@@ -5,7 +5,7 @@
 	var voteNumber = 0;
 	var pairArray = [];
 	var candidateNodeArray = [];
-	var voteCalc = voteCalc();
+	var voteCalc = new voteCalc();
 	$(document).ready(function(){
 		$("#addChoicesRows").bind("click", addChoicesFn);
 		$("#addVotesRows").bind("click", addVotesFn);
@@ -37,11 +37,12 @@
 		for (i = 1; i <= numOfChoices; i++) {
 			choiceTag = "#choice" + i;
 			entryValue = $(choiceTag).val();
-			choiceArray.push(entryValue);
+			choiceArray.push(entryValue);   // REMOIVE?
+			candidateNodeArray.push(new candNode(entryValue,i));
 		}
 		$('#voteEntry-container').css("display", "inline");
 		// TODO - Create Candidate Nodes
-			//
+			
 		// TODO - Create Pairs
 			// Create Individual pair
 			// Add pair to pairArray[]
@@ -178,7 +179,7 @@ function voteCalc() {
 				return 1;
 			}
 			return 0;
-		}
+		});
 
 		var	pair,
 			pairArray,
@@ -300,7 +301,7 @@ function pair() {
 * Node pertaining to a specific candidate class.
 */
 
-function candNode() {
+function candNode(candName, indID) {
 
 	var nextNodes; /* An array of candidate nodes that the
 	                          the current node points to. */
@@ -314,12 +315,11 @@ function candNode() {
 	* view-specific index ID of the node.
 	*/
 
-	this.candNode = function(candName, indID) {
-		nextNodes = []; // Starts with no next nodes.
-		cand = candName;
-		inDegree = 0; // Starts with no nodes pointing to this node.
-		indexID = indID;
-	}
+	this.nextNodes = []; // Starts with no next nodes.
+	this.cand = candName;
+	this.inDegree = 0; // Starts with no nodes pointing to this node.
+	this.indexID = indID;
+
 
 	/**
 	* Adds the specified argument node to the array of next nodes.
