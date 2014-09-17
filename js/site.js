@@ -4,7 +4,7 @@ var choiceArray = [];
 var voteNumber = 0;
 var pairArray = [];
 var candidateNodeArray = [];
-var voteCale = new VoteCalc();
+var voteCalc = voteCalc();
 $(document).ready(function(){
 	$("#addChoicesRows").bind("click", addChoicesFn);
 	$("#addVotesRows").bind("click", addVotesFn);
