@@ -114,28 +114,19 @@ function voteCalc() {
 * Pair of candidates class.
 */
 
-function pair() {
-	var cand1Node; // First candidate node.
-	var cand2Node; // Second candidate node.
-	var margin; // Margin of victory between the two candidates.
+function pair(canNod1, canNod2) {
 
-	/**
-	* Constructor, takes in the two candidate nodes..
-	*/
-
-	this.pairConstruct = function(canNod1, canNod2) {
-		cand1Node = canNod1;
-		cand2Node = canNod2;
-		margin = 0;
-	}
+	this.cand1Node = canNod1;
+	this.cand2Node = canNod2;
+	this.margin = 0;
 
 	/**
 	* Increments the margin if the first candidate is given, decrements
 	* otherwise (second candidate).
 	*/
 
-	this.adjustMargin = function(cand) {
-		(cand === cand1Node) ? margin++ : margin--;
+	this.adjustMargin = function(cand, ) {
+		(cand === this.cand1Node) ? this.margin++ : this.margin--;
 	}
 
 	/**
@@ -161,26 +152,12 @@ function pair() {
 * Node pertaining to a specific candidate class.
 */
 
-function candNode() {
+function candNode(candName, indID) {
 
-	var nextNodes; /* An array of candidate nodes that the
-	                          the current node points to. */
-	var cand; // The name of the candidate.
-	var inDegree; /* The number of candidate nodes that
-	                         point to this node. */
-	var indexID; // View-specific index ID of this node.
-
-	/**
-	* Constructor, takes in the name of the candidate and the
-	* view-specific index ID of the node.
-	*/
-
-	this.candNode = function(candName, indID) {
-		nextNodes = []; // Starts with no next nodes.
-		cand = candName;
-		inDegree = 0; // Starts with no nodes pointing to this node.
-		indexID = indID;
-	}
+	this.nextNodes = []; // Starts with no next nodes.
+	this.cand = candName;
+	this.inDegree = 0; // Starts with no nodes pointing to this node.
+	this.indexID = indID;
 
 	/**
 	* Adds the specified argument node to the array of next nodes.
