@@ -39,7 +39,7 @@ function voteCalc() {
 				return 1;
 			}
 			return 0;
-		}
+		});
 
 		var	pair,
 			pairArray,
