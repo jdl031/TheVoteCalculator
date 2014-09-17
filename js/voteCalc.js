@@ -32,10 +32,10 @@ function voteCalc() {
 		}
 
 		candidatesPairs.sort(function (a, b) {
-			if(Math.abs(a.margin) > Math.abs(b.margin) {
+			if(Math.abs(a.margin) > Math.abs(b.margin)) {
 				return -1;
 			}
-			else if(Math.abs(a.margin) < Math.abs(b.margin) {
+			else if(Math.abs(a.margin) < Math.abs(b.margin)) {
 				return 1;
 			}
 			return 0;
